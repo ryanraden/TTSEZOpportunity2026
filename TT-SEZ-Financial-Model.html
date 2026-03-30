@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T&T SEZ Retail Hub | Strategic Financial Model</title>
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- React & Babel CDNs (React 18) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #1B5E7B;
+            --primary-light: #2E86AB;
+            --accent: #E8763A;
+            --bg: #F8FAFC;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(229, 231, 235, 0.4);
+            --text-main: #0F172A;
+            --text-sub: #64748B;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --accent-gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #F8FAFC 0%, #DDE5ED 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .container {
+            padding: 40px 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+                width: 100%;
+                overflow-x: hidden;
+            }
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #EDF2F7;
+            border-radius: 12px;
+            outline: none;
+            margin: 12px 0;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            background: white;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 4px solid var(--primary-light);
+            box-shadow: var(--shadow-sm), 0 0 0 4px rgba(46, 134, 171, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            border-width: 5px;
+        }
+
+        .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-scenario {
+            padding: 12px 28px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        @media (max-width: 640px) {
+            #header-container, #scenario-controls, #summary-stats, #detailed-sections {
+                flex-direction: column !important;
+                display: flex !important;
+                align-items: stretch !important;
+                gap: 20px !important;
+                width: 100% !important;
+            }
+            #detailed-sections {
+                grid-template-columns: 1fr !important;
+            }
+            .scenario-buttons, #scenario-buttons-container {
+                flex-direction: column !important;
+                display: flex !important;
+                width: 100% !important;
+            }
+            #scenario-buttons-container > * {
+                width: 100% !important;
+                margin-bottom: 8px !important;
+            }
+            .stat-card {
+                flex: 1 1 100% !important;
+                width: 100% !important;
+                margin-bottom: 12px;
+            }
+            .stat-card:last-child {
+                margin-bottom: 0;
+            }
+            .reset-btn {
+                width: 100% !important;
+                margin-top: 10px !important;
+                display: block !important;
+            }
+            .btn-capture {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            .glass {
+                padding: 24px !important;
+                margin-bottom: 24px !important;
+            }
+            .reset-btn { font-size: 11px; margin-top: 12px; }
+            h1 { text-align: center; }
+            p { text-align: center; padding-left: 0 !important; }
+            #header-container { justify-content: center !important; text-align: center; }
+        }
+
+        .info-btn {
+            background: none;
+            border: none;
+            color: var(--primary-light);
+            cursor: pointer;
+            padding: 2px;
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .info-btn:hover { opacity: 1; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: #F3F4F6;
+            border: none;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #4B5563;
+        }
+
+        .reset-btn {
+            background: none;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748B;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover { background: #F8FAFC; border-color: #CBD5E1; color: var(--primary); }
+
+        .btn-capture {
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 10px 20px rgba(27,94,123,0.25);
+            display: flex; align-items: center; gap: 8;
+            transition: transform 0.2s;
+        }
+        .btn-capture:active { transform: scale(0.98); }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; }
+            .glass { box-shadow: none !important; border: 1px solid #ddd !important; background: white !important; }
+        }
+
+        @media (max-width: 640px) {
+            .stat-card {
+                padding: 16px !important;
+            }
+            .stat-card > div:nth-child(2) {
+                font-size: 24px !important;
+            }
+            .modal-content {
+                padding: 24px !important;
+            }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+
+        /* Utility Responsive Classes */
+        @media (max-width: 640px) {
+            .mobile-stack {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .mobile-hide { display: none !important; }
+            .mobile-full-width { width: 100% !important; min-width: 100% !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+
+        const SCENARIOS = {
+            conservative: { label: "Conservative", color: "#E8763A", captureRate: 0.03, regionalMultiplier: 1.2, occupancy: 0.70, rentPSF: 22, phases: 3 },
+            moderate:     { label: "Moderate",     color: "#2E86AB", captureRate: 0.06, regionalMultiplier: 1.5, occupancy: 0.82, rentPSF: 30, phases: 3 },
+            aggressive:   { label: "Aggressive",   color: "#1B5E7B", captureRate: 0.10, regionalMultiplier: 2.0, occupancy: 0.92, rentPSF: 40, phases: 3 },
+        };
+
+        const EXPLANATIONS = {
+            capex: {
+                title: "Total Project Capital Expenditure (Capex)",
+                impact: "Represents the total investment required for shell-and-core development, infrastructure, and international-standard site preparation at the Piarco hub.",
+                impactDetail: "This value is highly dynamic, reacting to total gross leasable area (GLA) and the 'Construction Cost per Square Foot' slider. It accounts for initial VAT and import duty savings realized under the SEZ framework for construction materials."
+            },
+            noi: {
+                title: "Stabilized Annual Net Operating Income (NOI)",
+                impact: "The primary indicator of the project's financial health and income potential after the asset reaches its target occupancy (stabilization).",
+                impactDetail: "Computed as [Gross Revenue] minus [Operating Expenses]. Key drivers include rental rate (PSF), capture of regional shopping spend, and a baseline 37% opex model (including property management and maintenance)."
+            },
+            spending: {
+                title: "Spending Capture Dynamics",
+                impact: "T&T currently loses approx. US$2.6B annually in credit card FX outflows. This hub is strategically positioned at Piarco to intercept this 'leakage' and retain purchasing power within the domestic economy.",
+                impactDetail: "By offering high-end global brands locally, we reduce the need for 'Miami shopping trips' and e-commerce leakage, significantly impacting the national FX balance."
+            },
+            fiscal: {
+                title: "SEZ Fiscal Advantages",
+                impact: "Projects in the SEZ benefit from the 2024 SEZ Act framework, which drastically lowers the cost of both development and operation.",
+                impactDetail: "Key triggers: 15% Corporate Tax (vs 30% national), zero-rated VAT on construction inputs (12.5% direct saving), and full Customs Duty exemptions on imported shop fittings and materials."
+            },
+            labor: {
+                title: "Labor Economic Impact",
+                impact: "Large-scale retail hubs act as primary employment engines. For every direct retail job created, an additional 1.8x jobs are induced in the logistics, security, and service sectors.",
+                impactDetail: "A 2.0M sqft development provides thousands of sustainable, high-skill roles in management, luxury retail, and site operations."
+            },
+            valuation: {
+                title: "Asset Valuation & Exit",
+                impact: "The implied property value is calculated using a 7.5% capitalization rate—a standard but conservative benchmark for prime Caribbean commercial retail assets.",
+                impactDetail: "This represents the stabilized market value if the asset were sold to a real estate investment trust (REIT) or global institutional developer."
+            }
+        };
+
+        const formatM   = (n) => `$${(n / 1e6).toFixed(1)}M`;
+        const formatB   = (n) => `$${(n / 1e9).toFixed(2)}B`;
+        const formatPct = (n) => `${(n * 100).toFixed(1)}%`;
+
+        function runModel(scenario, inputs) {
+            const s = SCENARIOS[scenario];
+            const momentum = inputs.momentum || 1.0;
+            const totalGLA = inputs.totalSqFt;
+            const totalDevCost = totalGLA * inputs.constructionCostPSF;
+            
+            // Dynamic Baselines
+            const dynamicBaseline = 5.9e9 * momentum;
+            const dynamicLeakage = dynamicBaseline * 0.444;
+            
+            // Baseline 2.0M sqft = 1.0x capture capacity
+            const scaleFactor = totalGLA / 2000000;
+            
+            // Dynamic capture proportional to development scale
+            const potentialCapture = dynamicLeakage * s.captureRate * scaleFactor;
+            
+            // Saturation Cap (ensure realistic national impact limit)
+            const capturedDomestic = Math.min(potentialCapture, dynamicBaseline * 0.20);
+            const totalCapturedSpend = capturedDomestic * 1.5; // Strategic Multiplier
+            const fxRetained = totalCapturedSpend;
+            
+            const occupiedSqFt = totalGLA * s.occupancy;
+            const annualRentalIncome = occupiedSqFt * s.rentPSF;
+            
+            const opexRate = 0.37;
+            const annualOpex = annualRentalIncome * opexRate;
+            const NOI = annualRentalIncome - annualOpex;
+            
+            const capRate = 0.075;
+            const impliedValue = NOI / capRate;
+            
+            const annualTaxSavings = NOI * 0.15;
+            const vatSavings = totalDevCost * 0.125;
+            const dutySavings = totalDevCost * 0.40 * 0.20;
+            
+            const yearOneROI = NOI / totalDevCost;
+            const paybackYears = totalDevCost / NOI;
+            
+            // Strategic FX & Fiscal Impact
+            const nationalImpactPct = (totalCapturedSpend / dynamicBaseline) * 100;
+            const totalFiscalSavings = annualTaxSavings + vatSavings + dutySavings;
+            const capexEfficiency = (vatSavings + dutySavings) / totalDevCost;
+            
+            const directJobs = Math.round(occupiedSqFt / 600);
+            const indirectJobs = Math.round(directJobs * 1.8);
+            
+            return {
+                totalDevCost, totalGLA, capturedDomestic, totalCapturedSpend, 
+                annualRentalIncome, annualOpex, NOI, impliedValue, capRate,
+                annualTaxSavings, vatSavings, dutySavings, totalFiscalSavings,
+                yearOneROI, paybackYears, fxRetained, nationalImpactPct,
+                directJobs, indirectJobs, occupiedSqFt, s, dynamicBaseline, dynamicLeakage, capexEfficiency
+            };
+        }
+
+        function Modal({ content, onClose }) {
+            if (!content) return null;
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="close-btn" onClick={onClose}>&times;</button>
+                        <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--primary)", fontSize: 24, marginBottom: 20 }}>{content.title}</h2>
+                        <p style={{ fontSize: 16, lineHeight: 1.6, color: "var(--text-main)", marginBottom: 16 }}>{content.impact}</p>
+                        <hr style={{ border: "none", borderTop: "1px solid #F3F4F6", margin: "20px 0" }} />
+                        <div style={{ padding: "15px", background: "#F9FAFC", borderRadius: "12px", borderLeft: "4px solid var(--primary-light)" }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", marginBottom: 8 }}>Strategic Impact</div>
+                            <p style={{ fontSize: 13, color: "#4B5563", margin: 0 }}>{content.impactDetail}</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function StatCard({ label, value, sub, accent, onInfo }) {
+            return (
+                <div className="glass stat-card" style={{ padding: "24px", flex: "1 1 200px", minWidth: "160px", position: "relative" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, color: "var(--text-sub)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700 }}>{label}</div>
+                        {onInfo && (
+                            <button className="info-btn" onClick={onInfo}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            </button>
+                        )}
+                    </div>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: accent || "var(--text-main)", fontFamily: "'DM Mono', monospace", lineHeight: 1 }}>{value}</div>
+                    {sub && <div style={{ fontSize: 12, color: "#9CA3AF", marginTop: 8 }}>{sub}</div>}
+                </div>
+            );
+        }
+
+        function ProgressBar({ label, value, max, color, amount }) {
+            const pct = Math.min((value / max) * 100, 100);
+            return (
+                <div style={{ marginBottom: 18 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 6 }}>
+                        <span style={{ fontWeight: 500, color: "var(--text-sub)" }}>{label}</span>
+                        <span style={{ fontWeight: 700, fontFamily: "'DM Mono', monospace" }}>{amount}</span>
+                    </div>
+                    <div style={{ height: 10, background: "#E2E8F0", borderRadius: 10, overflow: "hidden" }}>
+                        <div style={{ 
+                            height: "100%", width: `${pct}%`, 
+                            background: `linear-gradient(90deg, ${color}, ${color}aa)`, 
+                            borderRadius: 10, transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)" 
+                        }} />
+                    </div>
+                </div>
+            );
+        }
+
+        function App() {
+            const DEFAULT_INPUTS = { totalSqFt: 2000000, constructionCostPSF: 350, momentum: 1.0 };
+            const [scenario, setScenario] = useState("moderate");
+            const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+            const [modalContent, setModalContent] = useState(null);
+            const [showSuccess, setShowSuccess] = useState(false);
+            
+            const model = useMemo(() => runModel(scenario, inputs), [scenario, inputs]);
+            const sc = SCENARIOS[scenario];
+
+            const handleReset = () => {
+                setInputs(DEFAULT_INPUTS);
+                setScenario("moderate");
+            };
+
+            const handleCapture = () => {
+                const summary = `
+T&T SEZ Retail Hub - Key Metrics (${sc.label} Scenario)
+--------------------------------------------------
+Adjustment Factors: ${(inputs.totalSqFt/1e6).toFixed(1)}M SQFT | $${inputs.constructionCostPSF}/PSF
+--------------------------------------------------
+Total Capex: ${formatM(model.totalDevCost)}
+Stabilized NOI: ${formatM(model.NOI)}
+Asset Valuation: ${model.impliedValue > 1e9 ? formatB(model.impliedValue) : formatM(model.impliedValue)}
+Annual Yield: ${formatPct(model.yearOneROI)}
+Total Jobs Created: ${(model.directJobs + model.indirectJobs).toLocaleString()}
+Annual FX Retention: ${formatM(model.fxRetained)}
+--------------------------------------------------
+Fiscal Savings (Year 1): ${formatM(model.annualTaxSavings + model.vatSavings + model.dutySavings)}
+                `.trim();
+                
+                navigator.clipboard.writeText(summary).then(() => {
+                    setShowSuccess(true);
+                    setTimeout(() => setShowSuccess(false), 2000);
+                });
+            };
+
+            return (
+                <div className="container">
+                    <Modal content={modalContent} onClose={() => setModalContent(null)} />
+                    <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 24px" }}>
+                    
+                        {/* Header */}
+                        <div id="header-container" style={{ 
+                            display: "flex", 
+                            justifyContent: "space-between", 
+                            alignItems: "center", 
+                            marginBottom: 32,
+                            flexWrap: "wrap",
+                            gap: 20
+                        }}>
+                        <div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 12 }}>
+                                <div style={{ width: 10, height: 44, background: "linear-gradient(to bottom, var(--primary), var(--primary-light))", borderRadius: 5 }} />
+                                <h1 style={{ 
+                                    fontFamily: "'Playfair Display', serif", 
+                                    fontSize: "clamp(24px, 5vw, 38px)", 
+                                    margin: 0, 
+                                    fontWeight: 900, 
+                                    color: "var(--primary)", 
+                                    letterSpacing: "-0.02em" 
+                                }}>
+                                    T&T SEZ Retail Hub
+                                </h1>
+                            </div>
+                            <p style={{ margin: 0, color: "var(--text-sub)", fontSize: 17, paddingLeft: 28, fontWeight: 500 }}>
+                                Professional Financial Modeling Dashboard
+                            </p>
+                        </div>
+                        <button onClick={handleCapture} className="btn-capture no-print" style={{ whiteSpace: "nowrap" }}>
+                            {showSuccess ? "✓ Metrics Copied" : "Capture Key Metrics"}
+                        </button>
+                    </div>
+
+                    {/* Scenario & Controls */}
+                    <div className="glass" style={{ padding: "clamp(24px, 4vw, 40px)", marginBottom: 32 }}>
+                        <div id="scenario-controls" style={{ 
+                            display: "grid", 
+                            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", 
+                            gap: "40px",
+                            alignItems: "start"
+                        }}>
+                            <div>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                                    <div style={{ fontSize: 11, fontWeight: 800, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Strategy Scenario</div>
+                                    <button onClick={handleReset} className="reset-btn">Reset</button>
+                                </div>
+                                <div id="scenario-buttons-container" style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                                    {Object.entries(SCENARIOS).map(([key, s]) => (
+                                        <button key={key} onClick={() => setScenario(key)} className="btn-scenario" style={{
+                                            background: scenario === key ? s.color : "transparent",
+                                            borderColor: scenario === key ? s.color : "#E2E8F0",
+                                            color: scenario === key ? "white" : "#64748B",
+                                            padding: "10px 18px",
+                                            flex: "1 1 auto",
+                                            fontSize: "12px"
+                                        }}>
+                                            {s.label}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div style={{ 
+                                    marginTop: 20, padding: "14px", borderRadius: 12, 
+                                    background: `${sc.color}08`, border: `1px solid ${sc.color}15`,
+                                    fontSize: 12, color: "#4B5563", lineHeight: 1.5
+                                }}>
+                                    <strong>{sc.label}:</strong> {formatPct(sc.captureRate)} FX Capture &bull; {formatPct(sc.occupancy)} Occupancy
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div style={{ marginBottom: 28 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                                        <span style={{ fontSize: 12, fontWeight: 800, color: "var(--primary)", letterSpacing: "0.05em" }}>DEVELOPMENT SCALE</span>
+                                        <span style={{ fontSize: 13, fontWeight: 700, fontFamily: "'DM Mono'" }}>{(inputs.totalSqFt/1e6).toFixed(1)}M SQFT</span>
+                                    </div>
+                                    <input type="range" min={500000} max={10000000} step={100000} value={inputs.totalSqFt}
+                                        onChange={e => setInputs({...inputs, totalSqFt: +e.target.value})} />
+                                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 4 }}>Toggle footprint for strategic capture</div>
+                                </div>
+                                <div>
+                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                                        <span style={{ fontSize: 12, fontWeight: 800, color: "var(--primary)", letterSpacing: "0.05em" }}>CONSTRUCTION COST</span>
+                                        <span style={{ fontSize: 13, fontWeight: 700, fontFamily: "'DM Mono'" }}>${inputs.constructionCostPSF}/PSF</span>
+                                    </div>
+                                    <input type="range" min={200} max={650} step={10} value={inputs.constructionCostPSF}
+                                        onChange={e => setInputs({...inputs, constructionCostPSF: +e.target.value})} />
+                                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 4 }}>Shell & Core SEZ benchmarks</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                                    <span style={{ fontSize: 12, fontWeight: 800, color: "var(--primary)", letterSpacing: "0.05em" }}>MARKET MOMENTUM (MACRO)</span>
+                                    <span style={{ fontSize: 13, fontWeight: 700, fontFamily: "'DM Mono'", color: "var(--accent)" }}>{inputs.momentum}x</span>
+                                </div>
+                                <input type="range" min={0.8} max={1.5} step={0.05} value={inputs.momentum}
+                                    onChange={e => setInputs({...inputs, momentum: +e.target.value})} style={{ accentColor: "var(--accent)" }} />
+                                <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 8, fontWeight: 600, lineHeight: 1.4 }}>
+                                    Simulates +/- national growth on the $5.9B FX baseline
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Primary Stats Summary */}
+                    <div id="summary-stats" style={{ 
+                        display: "flex", 
+                        gap: 16, 
+                        flexWrap: "wrap", 
+                        marginBottom: 32,
+                        justifyContent: "center"
+                    }}>
+                        <StatCard label="Total Project Capex" value={formatM(model.totalDevCost)} sub={`${(model.totalGLA/1e6).toFixed(1)}M sqft Phased`} accent="var(--primary)" onInfo={() => setModalContent(EXPLANATIONS.capex)} />
+                        <StatCard label="Annual NOI (Stabilized)" value={formatM(model.NOI)} sub={`Yield: ${formatPct(model.yearOneROI)}`} accent="#10B981" onInfo={() => setModalContent(EXPLANATIONS.noi)} />
+                        <StatCard label="Asset Valuation" value={model.impliedValue > 1e9 ? formatB(model.impliedValue) : formatM(model.impliedValue)} sub="Based on 7.5% Cap Rate" accent="#6366F1" onInfo={() => setModalContent(EXPLANATIONS.valuation)} />
+                        <StatCard label="Annual FX Retained" value={formatM(model.fxRetained)} sub="Local Purchase Retention" accent={sc.color} onInfo={() => setModalContent(EXPLANATIONS.spending)} />
+                    </div>
+
+                    {/* Detailed Sections Grid */}
+                    <div id="detailed-sections" style={{ 
+                        display: "grid", 
+                        gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))", 
+                        gap: 24, 
+                        marginBottom: 32,
+                        width: "100%",
+                        boxSizing: "border-box"
+                    }}>
+                        
+                        {/* Section 1: Spending Capture */}
+                        <div className="glass" style={{ padding: "28px" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+                                <div style={{ fontSize: 13, fontWeight: 800, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Spending Capture Dynamic</div>
+                                <button className="info-btn" onClick={() => setModalContent(EXPLANATIONS.spending)}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                </button>
+                            </div>
+                            <ProgressBar label="Total Domestic FX Outflow (Projected)" value={model.dynamicBaseline} max={model.dynamicBaseline} color="#64748B" amount={formatB(model.dynamicBaseline)} />
+                            <ProgressBar label="Addressable Segment (Leakage)" value={model.dynamicLeakage} max={model.dynamicBaseline} color="#94A3B8" amount={formatB(model.dynamicLeakage)} />
+                            <ProgressBar label="Projected Strategic Capture (Direct)" value={model.capturedDomestic} max={model.dynamicBaseline} color="#E8763A" amount={formatM(model.capturedDomestic)} />
+                            <ProgressBar label="Total Regional Potential Impact" value={model.totalCapturedSpend} max={model.dynamicBaseline} color="#2E86AB" amount={formatM(model.totalCapturedSpend)} />
+                            
+                            <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                                <div style={{ flex: 1, padding: "16px", background: "#F1F5F9", borderRadius: "14px", borderLeft: "4px solid #1B5E7B" }}>
+                                    <div style={{ fontSize: 24, fontWeight: 900, color: "#1B5E7B", fontFamily: "'DM Mono'" }}>{model.nationalImpactPct.toFixed(2)}%</div>
+                                    <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, textTransform: "uppercase", marginTop: 4 }}>FX Recovery</div>
+                                </div>
+                                <div style={{ flex: 1, padding: "16px", background: "#F1F5F9", borderRadius: "14px", borderLeft: "4px solid #F97316" }}>
+                                    <div style={{ fontSize: 24, fontWeight: 900, color: "#F97316", fontFamily: "'DM Mono'" }}>{model.directJobs.toLocaleString()}</div>
+                                    <div style={{ fontSize: 10, color: "#64748B", fontWeight: 700, textTransform: "uppercase", marginTop: 4 }}>Direct Jobs</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Section 2: SEZ Fiscal Advantage */}
+                        <div className="glass" style={{ padding: "32px", display: "flex", flexDirection: "column", height: "100%", width: "100%", boxSizing: "border-box" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
+                                <div style={{ fontSize: 12, fontWeight: 800, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>SEZ Fiscal Advantage</div>
+                                <button className="info-btn" onClick={() => setModalContent(EXPLANATIONS.fiscal)}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                </button>
+                            </div>
+                            <ProgressBar label="Tax Savings (15% Delta)" value={model.annualTaxSavings} max={model.annualTaxSavings + model.vatSavings + model.dutySavings} color="#818CF8" amount={formatM(model.annualTaxSavings)} />
+                            <ProgressBar label="VAT Construction Exemption" value={model.vatSavings} max={model.annualTaxSavings + model.vatSavings + model.dutySavings} color="#60A5FA" amount={formatM(model.vatSavings)} />
+                            <ProgressBar label="Duty Relief on Materials" value={model.dutySavings} max={model.annualTaxSavings + model.vatSavings + model.dutySavings} color="#2DD4BF" amount={formatM(model.dutySavings)} />
+                            
+                            <div style={{ display: "flex", gap: 12, marginTop: "auto" }}>
+                                <div style={{ flex: 1, padding: "16px", background: "rgba(99, 102, 241, 0.05)", borderRadius: "14px", borderLeft: "4px solid #6366F1" }}>
+                                    <div style={{ fontSize: 24, fontWeight: 900, color: "#312E81", fontFamily: "'DM Mono'" }}>{formatM(model.totalFiscalSavings)}</div>
+                                    <div style={{ fontSize: 10, color: "#6366F1", fontWeight: 700, textTransform: "uppercase", marginTop: 4 }}>Incentive Yield</div>
+                                </div>
+                                <div style={{ flex: 1, padding: "16px", background: "rgba(45, 212, 191, 0.05)", borderRadius: "14px", borderLeft: "4px solid #2DD4BF" }}>
+                                    <div style={{ fontSize: 24, fontWeight: 900, color: "#134E4A", fontFamily: "'DM Mono'" }}>{formatPct(model.capexEfficiency)}</div>
+                                    <div style={{ fontSize: 10, color: "#0D9488", fontWeight: 700, textTransform: "uppercase", marginTop: 4 }}>Efficiency Shield</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Matrix View */}
+                    <div className="glass" style={{ 
+                        marginTop: 32, 
+                        padding: "16px",
+                        maxWidth: "100%",
+                        boxSizing: "border-box"
+                    }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24, flexWrap: "wrap", gap: 10 }}>
+                            <div style={{ fontSize: 12, fontWeight: 800, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                                Strategic Matrix Comparison
+                            </div>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--primary-light)", background: "rgba(46, 134, 171, 0.08)", padding: "4px 10px", borderRadius: "6px" }}>
+                                &bull; Reacting to Adjusted Parameters: {(inputs.totalSqFt/1e6).toFixed(1)}M sqft / ${inputs.constructionCostPSF} cost
+                            </div>
+                        </div>
+                        <div style={{ overflowX: "auto", maxWidth: "100%", WebkitOverflowScrolling: "touch" }}>
+                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <thead>
+                                <tr style={{ borderBottom: "2px solid var(--primary)" }}>
+                                    <th style={{ 
+                                        textAlign: "left", padding: "12px", color: "var(--primary)", fontSize: 13,
+                                        position: "sticky", left: 0, background: "white", zIndex: 20, 
+                                        minWidth: "140px", borderRight: "2px solid var(--primary)"
+                                    }}>Performance Metric</th>
+                                    {Object.entries(SCENARIOS).map(([k, s]) => (
+                                        <th key={k} style={{ 
+                                            textAlign: "right", padding: "12px", color: s.color, fontWeight: 800,
+                                            background: k === scenario ? `${s.color}05` : "transparent"
+                                        }}>{s.label}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[
+                                    { l: "Retail Capture Rate", v: m => formatPct(m.s.captureRate) },
+                                    { l: "Annual NOI (Stabilized)", v: m => formatM(m.NOI) },
+                                    { l: "Yield on Cost (ROI)", v: m => formatPct(m.yearOneROI) },
+                                    { l: "Property Capital Value", v: m => m.impliedValue > 1e9 ? formatB(m.impliedValue) : formatM(m.impliedValue) },
+                                    { l: "Estimated Payback Period", v: m => `${m.paybackYears.toFixed(1)} yrs` },
+                                    { l: "Employment Impact", v: m => (m.directJobs + m.indirectJobs).toLocaleString() },
+                                    { l: "Annual FX Retention Impact", v: m => formatM(m.fxRetained) }
+                                ].map((row, i) => (
+                                    <tr key={i} style={{ borderBottom: "1px solid #EDF2F7", background: i % 2 === 0 ? "transparent" : "rgba(241, 245, 249, 0.3)" }}>
+                                        <td style={{ 
+                                            padding: "12px", fontWeight: 600, color: "#4A5568", fontSize: 12,
+                                            position: "sticky", left: 0, zIndex: 10, borderRight: "1px solid #EDF2F7",
+                                            background: i % 2 === 0 ? "white" : "#F8FAFD" 
+                                        }}>{row.l}</td>
+                                        {Object.keys(SCENARIOS).map(k => {
+                                            const m = runModel(k, inputs);
+                                            return (
+                                                <td key={k} style={{ 
+                                                    textAlign: "right", padding: "12px", 
+                                                    fontFamily: "'DM Mono'", 
+                                                    fontWeight: k === scenario ? 800 : 500,
+                                                    color: k === scenario ? SCENARIOS[k].color : "var(--text-main)",
+                                                    fontSize: 13,
+                                                    background: k === scenario ? `${SCENARIOS[k].color}05` : "transparent",
+                                                    borderLeft: k === scenario ? `1px solid ${SCENARIOS[k].color}15` : "none",
+                                                    borderRight: k === scenario ? `1px solid ${SCENARIOS[k].color}15` : "none"
+                                                }}>
+                                                    {row.v(m)}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: 40, textAlign: "center", borderTop: "1px solid #E2E8F0", paddingTop: 24 }}>
+                        <p style={{ fontSize: 11, color: "var(--text-sub)", lineHeight: 1.8, maxWidth: 800, margin: "0 auto" }}>
+                            Strategic Model 3.3 | Professional Dynamic Matrix | Piarco International Airport SEZ <br />
+                            &copy; 2026 Ryan Elcock. All Rights Reserved.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        );
+    }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
